@@ -1,13 +1,12 @@
 package com.example.sql_fetch_data;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@RestController
+@Controller
 public class HelloWorldController {
     private final UserRepository userRepository;
 
@@ -16,12 +15,16 @@ public class HelloWorldController {
     }
 
     @GetMapping("/users")
-    public List getUsers(){
-        return userRepository.findAll();
+    public String getUsers(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("user", new User());
+        return "users";
     }
+
     @PostMapping("/users")
-    public UserModel createUser(@RequestBody UserModel user) {
-        return userRepository.save(user);
+    public String createUser(User user) {
+        userRepository.save(user);
+        return "redirect:/users";
     }
     @GetMapping("/")
     public String helloWorldv(){
